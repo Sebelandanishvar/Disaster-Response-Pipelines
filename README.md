@@ -28,7 +28,7 @@ There is one other change that you are required to make. We've provided code for
 Starter Code
 The coding for this project can be completed using the Project Workspace IDE provided. Here's the file structure of the project:
  
-<img src="/doc/config1.png" width="500">
+<img src="/doc/config1.PNG" width="500">
 
 #Running the Web App
 When working in the Project Workspace IDE, here is how to see your Flask app.
