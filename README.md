@@ -30,7 +30,7 @@ The coding for this project can be completed using the Project Workspace IDE pro
  
 <img src="/doc/config1.PNG" width="500">
 
-#Running the Web App
+# Running the Web App
 When working in the Project Workspace IDE, here is how to see your Flask app.
 
 Open a new terminal window. You should already be in the workspace folder, but if not, then use terminal commands to navigate inside the folder with the run.py file.
