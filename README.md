@@ -4,4 +4,4 @@ This project will include a web app where an emergency worker can input a new me
 
 Below is an screenshots of the web app.
 
-<img src="/doc/disaster-response-project2.png" width="250">
+<img src="/doc/disaster-response-project2.png" width="500">
