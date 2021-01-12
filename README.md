@@ -44,7 +44,7 @@ Now, open another Terminal Window.
 
 Type
 
-
+<img src="/doc/config2.png" width="500">
 
 
 
