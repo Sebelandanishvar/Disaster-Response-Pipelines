@@ -73,7 +73,7 @@ python run.py
 
 Your web app should now be running if there were no errors.
 
-Now, open another explorer (Chrome, Edge , etc) and copy/paste the http address (for exmple: http://127.0.0.1:5000/) in address bar.
+Now, open an explorer page (Chrome, Edge , etc) and copy/paste the http address (for exmple: http://127.0.0.1:5000/) in address bar.
 
 All done!
 
