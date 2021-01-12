@@ -60,7 +60,7 @@ Here's the file structure of the project:
 <img src="/doc/config1.PNG" width="500">
 
 
-# Running the Web App
+## Running the Web App
 When working with the Project, here is how to see your Flask app.
 
 Open a new terminal window. You should already be in the workspace folder, but if not, then use terminal commands to navigate inside the folder with the run.py file.
