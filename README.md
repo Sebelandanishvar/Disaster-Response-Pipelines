@@ -5,7 +5,7 @@ This project will include a web app to input a new message and get classificatio
 Below are screenshots of the web app.
 
 
-<img src="/doc/config3.png" width="500">
+<img src="/doc/config3.PNG" width="500">
 <img src="/doc/disaster-response-project2.png" width="500">
 
 
