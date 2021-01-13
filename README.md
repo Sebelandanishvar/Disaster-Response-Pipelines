@@ -6,7 +6,7 @@ Below are screenshots of the web app.
 
 
 <img src="/doc/config3.PNG" width="500">
-<img src="/doc/disaster-response-project2.png" width="500">
+<img src="/doc/config4.PNG" width="500">
 
 
 ## Install
