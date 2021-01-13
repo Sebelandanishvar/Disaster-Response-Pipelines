@@ -3,32 +3,34 @@ import plotly
 import pandas as pd
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
-
 from flask import Flask
 from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
-#import sklearn.external.joblib as extjoblib
 import joblib
 from sqlalchemy import create_engine
 
 
 app = Flask(__name__)
 
-# def tokenize(text):
-#     tokens = word_tokenize(text)
-#     lemmatizer = WordNetLemmatizer()
-
-#     clean_tokens = []
-#     for tok in tokens:
-#         clean_tok = lemmatizer.lemmatize(tok).lower().strip()
-#         clean_tokens.append(clean_tok)
-
-#     return clean_tokens
 
     
 def tokenize(text):
-
-
+    """Description of the Function:
+     
+       Tokenizing the text data
+    
+     1- Split text into tokens.
+     2- For each token: lemmatize, normalize case, 
+    and strip leading and trailing white space.
+     3- Return the tokens in a list.
+    
+    Parameters:
+    text: Text string
+       
+    Returns:
+       clean_tokens: Tokenized text
+    
+    """
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
 
@@ -53,12 +55,10 @@ model = joblib.load("../models/classifier_SD.pkl")
 def index():
     
     # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
-    genre_counts = df.groupby('genre').count()['message']
+    genre_counts = df.groupby('missing_people').count()['message']
     genre_names = list(genre_counts.index)
     
     # create visuals
-    # TODO: Below is an example - modify to create your own visuals
     graphs = [
         {
             'data': [
@@ -69,12 +69,12 @@ def index():
             ],
 
             'layout': {
-                'title': 'Distribution of Message Genres',
+                'title': 'Distribution of Missing People',
                 'yaxis': {
                     'title': "Count"
                 },
                 'xaxis': {
-                    'title': "Genre"
+                    'title': "Missing People"
                 }
             }
         }

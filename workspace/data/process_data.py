@@ -3,36 +3,73 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
-	messages = pd.read_csv (messages_filepath)
-	categories = pd.read_csv(categories_filepath)
-	df = pd.concat((messages,categories['categories']),axis = 1)
-	return df
-
-def clean_data(df):
-    categories = df.categories.str.split(";", expand=True).rename(columns = lambda x : 'Cat' + str(x))
-    row = categories.iloc[0]
-    category_colnames = row.apply(lambda x : x[:-2])
-    categories.columns = category_colnames
-
-    for column in categories:
- 	   # set each value to be the last character of the string
-        categories[column] = categories[column] .apply(lambda x : x[-1])
     
-	    # convert column from string to numeric
-        categories[column] = categories[column] .apply(lambda x : int(x))
+    """Description of the Function:
+    Read two CSV file and merge them.
+        
+    Parameters:
+        messages_filepath: The Message CSV file path.
+        categories_filepath:The Catergories CSV file path.
 
-
-    df = pd.concat([df.drop('categories', axis=1),categories], axis=1)
-    df.drop_duplicates(subset=None, inplace=True)
-    
+    Returns:
+       df: dataframe
+    """
+    messages = pd.read_csv (messages_filepath)
+    categories = pd.read_csv(categories_filepath)
+    df = pd.concat((messages,categories['categories']),axis = 1)
     return df
 
+def clean_data(df):
+    
+        """Description of the Function:
+            
+    Extract categories and drop duplicates       
+    Parameters:
+        df: dataframe
+    
+
+    Returns:
+       df: dataframe
+    """
+
+        categories = df.categories.str.split(";", expand=True).rename(columns = lambda x : 'Cat' + str(x))
+        row = categories.iloc[0]
+        category_colnames = row.apply(lambda x : x[:-2])
+        categories.columns = category_colnames
+        
+        for column in categories:
+         	   # set each value to be the last character of the string
+            categories[column] = categories[column] .apply(lambda x : x[-1])
+        
+        	    # convert column from string to numeric
+            categories[column] = categories[column] .apply(lambda x : int(x))
+        
+        
+        df = pd.concat([df.drop('categories', axis=1),categories], axis=1)
+        df.drop_duplicates(subset=None, inplace=True)
+        
+        return df
+
 def save_data(df, database_filename):
-	engine = create_engine('sqlite:///'+database_filename)
-	df.to_sql('InsertTableName', engine, index=False) 
+    
+            """Description of the Function:
+            
+    Save data in SQLite database       
+    Parameters:
+        df: dataframe
+        database_filename: Ouput file name
+
+    """
+            engine = create_engine('sqlite:///'+database_filename)
+
+    
+            df.to_sql('InsertTableName', engine, index=False) 
+
+
 
 
 def main():
+    
     if len(sys.argv) == 4:
 
         messages_filepath, categories_filepath, database_filepath = sys.argv[1:]

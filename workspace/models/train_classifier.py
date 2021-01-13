@@ -10,6 +10,7 @@ from sklearn.metrics import classification_report
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.multioutput import MultiOutputClassifier
+from sklearn.model_selection import GridSearchCV
 from sklearn.feature_extraction.text import TfidfTransformer, CountVectorizer
 import joblib
 
@@ -17,66 +18,116 @@ import joblib
 nltk.download(['punkt', 'wordnet', 'averaged_perceptron_tagger'])
 
 def load_data(database_filepath):
-    engine = create_engine('sqlite:///'+database_filepath)
-    df = pd.read_sql_table('InsertTableName',engine)
-    #df
-    X = df['message'] 
-    y = df.iloc[:, 4:]
-    category_names = y.columns
     
-    return X, y, category_names
+        """Description of the Function:
+    Loading data from SQLite database
+        
+    Parameters:
+        database_filepath: Database file path.
+       
+    Returns:
+       X: Network input
+       y: Network output
+       catergory_names: Catergories names
+    """
+    
+        engine = create_engine('sqlite:///'+database_filepath)
+        df = pd.read_sql_table('InsertTableName',engine)
+        #df
+        X = df['message'] 
+        y = df.iloc[:, 4:]
+        category_names = y.columns
+        
+        return X, y, category_names
 
 def tokenize(text):
+
+    """Description of the Function:
+     
+       Tokenizing the text data
+    
+     1- Split text into tokens.
+     2- For each token: lemmatize, normalize case, 
+    and strip leading and trailing white space.
+     3- Return the tokens in a list.
+    
+    Parameters:
+    text: Text string
+       
+    Returns:
+       clean_tokens: Tokenized text
+    
+    """
+
+    
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
-
     clean_tokens = []
     for tok in tokens:
         clean_tok = lemmatizer.lemmatize(tok).lower().strip()
         clean_tokens.append(clean_tok)
-
+    
     return clean_tokens
 
 
 
-
 def build_model():
+    
 
-  
+
     pipeline = Pipeline([
         ('features', FeatureUnion([
-
+    
             ('text_pipeline', Pipeline([
                 ('vect', CountVectorizer(tokenizer=tokenize)),
                 ('tfidf', TfidfTransformer())
             ]))
-
+    
             
         ])),
-
+    
         ('classifier', MultiOutputClassifier(RandomForestClassifier()))
     ])
-
+    
                 
                  
     parameters = {  
-
-                'features__text_pipeline__vect__max_features': (5000),
-                'features__text_pipeline__tfidf__use_idf': (True),
-                'classifier__estimator__n_estimators': (500),
-                'classifier__estimator__max_depth': (80),
-                'classifier__estimator__max_features': None
-            }
+        
+                    'features__text_pipeline__vect__max_features': (None, 5000, 10000),
+                    'features__text_pipeline__tfidf__use_idf': (True, False),
+                    'classifier__estimator__n_estimators': [100,500],
+                    'classifier__estimator__max_depth': [None, 80, 100],
+                    'classifier__estimator__max_features':[ None ,'auto', 20, 30]
+                }
     
-    pipeline.set_params(**parameters)   
-   
-   
-    return pipeline
+    
+       
+    cv = GridSearchCV(pipeline, param_grid = parameters)
+       
+    return cv
+
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
     
-
+    """Description of the Function:
+     
+       Evaluating the created model 
+        
+     1- Split text into tokens.
+     2- For each token: lemmatize, normalize case, 
+        and strip leading and trailing white space.
+     3- Return the tokens in a list.
+        
+     
+        
+    Parameters:
+        model: The created model
+        X_test: Test input data
+        Y_test: Test output data
+        category_names: Categories names
+       
+    """
     
     y_pred_tuned = model.predict(X_test)
     for col in category_names:
@@ -84,11 +135,24 @@ def evaluate_model(model, X_test, Y_test, category_names):
         print(col, classification_report(Y_test[col].values, y_pred_tuned[:,int(np.where(category_names==col)[0])]))
 
 
+
 def save_model(model, model_filepath):
+    
+    """Description of the Function:
+    Saving the creatde model
+    
+    Parameters:
+    model: created model
+    model_filepath: file path 
+       
+    """
       
     joblib.dump(model, model_filepath)
+    
+    
 
 def main():
+    
     if len(sys.argv) == 3:
         database_filepath, model_filepath = sys.argv[1:]
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
